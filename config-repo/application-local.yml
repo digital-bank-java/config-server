@@ -1,0 +1,4 @@
+digital-bank:
+  platform:
+    environment: local
+    region: local

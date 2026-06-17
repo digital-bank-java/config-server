@@ -1,0 +1,3 @@
+digital-bank:
+  platform:
+    name: digital-bank-java
