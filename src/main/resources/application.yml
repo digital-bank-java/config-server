@@ -4,15 +4,28 @@ server:
 spring:
   application:
     name: config-server
-  profiles:
-    active: native
   cloud:
     config:
       server:
-        native:
-          search-locations:
-            - file:./config-repo
-            - file:./config-repo/{application}
+        accept-empty: false
+        git:
+          uri: "${CONFIG_REPO_URI:file:../platform-config}"
+          default-label: "${CONFIG_REPO_DEFAULT_LABEL:main}"
+          try-master-branch: false
+          search-paths:
+            - "{application}"
+          clone-on-start: true
+          force-pull: true
+          delete-untracked-branches: true
+          timeout: 10
+          username: "${CONFIG_REPO_USERNAME:}"
+          password: "${CONFIG_REPO_TOKEN:}"
+        health:
+          repositories:
+            platform-config:
+              name: customer-service
+              profiles: local
+              label: "${CONFIG_REPO_DEFAULT_LABEL:main}"
 
 management:
   endpoints:

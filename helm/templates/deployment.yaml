@@ -30,6 +30,21 @@ spec:
         - name: {{ include "config-server.name" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: CONFIG_REPO_URI
+              value: {{ .Values.configRepository.uri | quote }}
+            - name: CONFIG_REPO_DEFAULT_LABEL
+              value: {{ .Values.configRepository.defaultLabel | quote }}
+            - name: CONFIG_REPO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.configRepository.credentialsSecret.name }}
+                  key: {{ .Values.configRepository.credentialsSecret.usernameKey }}
+            - name: CONFIG_REPO_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.configRepository.credentialsSecret.name }}
+                  key: {{ .Values.configRepository.credentialsSecret.tokenKey }}
           securityContext:
             {{- toYaml .Values.containerSecurityContext | nindent 12 }}
           ports:

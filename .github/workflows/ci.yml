@@ -84,17 +84,33 @@ jobs:
             - name: Smoke test container
               shell: bash
               run: |
+                  config_repo_fixture="$(mktemp -d)"
+                  cp -R src/test/resources/config-repo/. "${config_repo_fixture}/"
+                  git -C "${config_repo_fixture}" init --initial-branch=main
+                  git -C "${config_repo_fixture}" config user.name "Config Server CI"
+                  git -C "${config_repo_fixture}" config user.email "config-server-ci@localhost"
+                  git -C "${config_repo_fixture}" add .
+                  git -C "${config_repo_fixture}" commit --message "Create CI configuration fixture"
+                  chmod -R a+rwX "${config_repo_fixture}"
+
+                  cleanup() {
+                    docker rm --force config-server-ci > /dev/null 2>&1 || true
+                    rm -rf "${config_repo_fixture}"
+                  }
+                  trap cleanup EXIT
+
                   docker run --detach \
                     --name config-server-ci \
                     --publish 8888:8888 \
+                    --env CONFIG_REPO_URI=file:/platform-config \
+                    --env CONFIG_REPO_DEFAULT_LABEL=main \
+                    --volume "${config_repo_fixture}:/platform-config" \
                     digital-bank-java/config-server:ci
-
-                  trap 'docker rm --force config-server-ci' EXIT
 
                   ready=false
                   for attempt in {1..30}; do
                     if curl --fail --silent \
-                      http://localhost:8888/actuator/health > /dev/null; then
+                      http://localhost:8888/actuator/health/liveness > /dev/null; then
                       ready=true
                       break
                     fi
@@ -107,5 +123,5 @@ jobs:
                   fi
 
                   curl --fail --silent \
-                    http://localhost:8888/customer-service/local \
-                    | grep --quiet '"name":"customer-service"'
+                    http://localhost:8888/test-service/default \
+                    | grep --quiet '"test.message":"config-server-integration-test"'

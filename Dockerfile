@@ -17,10 +17,10 @@ RUN groupadd --gid 10001 spring \
 
 WORKDIR /app
 
+ENV XDG_CONFIG_HOME=/tmp/.config
+
 COPY --from=builder --chown=10001:10001 \
     /workspace/target/config-server-*.jar app.jar
-
-COPY --chown=10001:10001 config-repo/ config-repo/
 
 USER 10001:10001
 
