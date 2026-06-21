@@ -1,3 +1,0 @@
-digital-bank:
-  service:
-    runtime-profile: local

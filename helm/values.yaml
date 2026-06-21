@@ -5,8 +5,16 @@ revisionHistoryLimit: 3
 
 image:
   repository: digital-bank-java/config-server
-  tag: "0.0.1"
+  tag: "0.0.2"
   pullPolicy: IfNotPresent
+
+configRepository:
+  uri: https://github.com/digital-bank-java/platform-config.git
+  defaultLabel: main
+  credentialsSecret:
+    name: config-server-git-credentials
+    usernameKey: username
+    tokenKey: token
 
 service:
   type: ClusterIP
@@ -22,7 +30,7 @@ resources:
 
 probes:
   startup:
-    path: /actuator/health
+    path: /actuator/health/liveness
     failureThreshold: 30
     periodSeconds: 5
   liveness:
