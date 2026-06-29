@@ -9,7 +9,7 @@ image:
   pullPolicy: IfNotPresent
 
 configRepository:
-  uri: https://github.com/digital-bank-java/platform-config.git
+  uri: https://github.com/digital-bank-java/config-repo.git
   defaultLabel: main
   credentialsSecret:
     name: config-server-git-credentials
