@@ -9,7 +9,7 @@ spring:
       server:
         accept-empty: false
         git:
-          uri: "${CONFIG_REPO_URI:file:../platform-config}"
+          uri: "${CONFIG_REPO_URI:file:../config-repo}"
           default-label: "${CONFIG_REPO_DEFAULT_LABEL:main}"
           try-master-branch: false
           search-paths:
@@ -22,7 +22,7 @@ spring:
           password: "${CONFIG_REPO_TOKEN:}"
         health:
           repositories:
-            platform-config:
+            config-repo:
               name: customer-service
               profiles: local
               label: "${CONFIG_REPO_DEFAULT_LABEL:main}"

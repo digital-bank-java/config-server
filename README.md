@@ -17,7 +17,7 @@ Centralized configuration service for the Digital Bank Java platform, built with
 
 ## Configuration Model
 
-The service uses the Spring Cloud Config Git backend. Client configuration is owned by the separate `platform-config` repository so configuration can change independently of the Config Server image.
+The service uses the Spring Cloud Config Git backend. Client configuration is owned by the separate `config-repo` repository so configuration can change independently of the Config Server image.
 
 ### Config Server Runtime Configuration
 
@@ -31,10 +31,10 @@ The service uses the Spring Cloud Config Git backend. Client configuration is ow
 
 ### Client Configuration Repository
 
-The sibling `platform-config` repository contains configuration served to client services:
+The sibling `config-repo` repository contains configuration served to client services:
 
 ```text
-platform-config/
+config-repo/
 ├── application.yml
 ├── application-local.yml
 └── customer-service/
@@ -69,12 +69,12 @@ helm version --short
 
 ## Run Locally
 
-Clone `platform-config` beside this repository. The default local repository URI is `file:../platform-config`:
+Clone `config-repo` beside this repository. The default local repository URI is `file:../config-repo`:
 
 ```text
 digital-bank-java/
 ├── config-server/
-└── platform-config/
+└── config-repo/
 ```
 
 Run commands from the `config-server` repository root.
@@ -125,13 +125,13 @@ curl --fail http://localhost:8888/customer-service/local
 The local response combines configuration from:
 
 ```text
-platform-config/customer-service/customer-service-local.yml
-platform-config/application-local.yml
-platform-config/customer-service/customer-service.yml
-platform-config/application.yml
+config-repo/customer-service/customer-service-local.yml
+config-repo/application-local.yml
+config-repo/customer-service/customer-service.yml
+config-repo/application.yml
 ```
 
-More specific profile and service configuration takes precedence over shared defaults. The response `version` identifies the exact `platform-config` Git commit used.
+More specific profile and service configuration takes precedence over shared defaults. The response `version` identifies the exact `config-repo` Git commit used.
 
 ## Run With Docker
 
@@ -147,7 +147,7 @@ Create a disposable writable copy of the local configuration repository. JGit re
 
 ```bash
 CONFIG_REPO_FIXTURE="$(mktemp -d)"
-cp -R ../platform-config/. "$CONFIG_REPO_FIXTURE/"
+cp -R ../config-repo/. "$CONFIG_REPO_FIXTURE/"
 chmod -R a+rwX "$CONFIG_REPO_FIXTURE"
 ```
 
@@ -158,9 +158,9 @@ docker run --detach \
   --rm \
   --name digital-bank-java-config-server \
   --publish 8888:8888 \
-  --env CONFIG_REPO_URI=file:/platform-config \
+  --env CONFIG_REPO_URI=file:/config-repo \
   --env CONFIG_REPO_DEFAULT_LABEL=main \
-  --volume "$CONFIG_REPO_FIXTURE:/platform-config" \
+  --volume "$CONFIG_REPO_FIXTURE:/config-repo" \
   digital-bank-java/config-server:0.0.2
 ```
 
@@ -272,7 +272,7 @@ Third-party GitHub Actions are pinned to immutable commit SHAs.
 
 The same container and Helm chart are intended to move through SIT, UAT, and PROD without application rebuilds. Hosted environments will provide environment-specific image repositories, immutable image tags, resource sizing, and infrastructure configuration through the deployment pipeline.
 
-Configuration is promoted independently through the dedicated Git-backed `platform-config` repository. Secrets must remain outside Git and Helm values and be supplied through the environment's approved secret-management integration. AWS environments will replace the manually created SIT Secret with managed secret delivery and rotation.
+Configuration is promoted independently through the dedicated Git-backed `config-repo` repository. Secrets must remain outside Git and Helm values and be supplied through the environment's approved secret-management integration. AWS environments will replace the manually created SIT Secret with managed secret delivery and rotation.
 
 ## Development Workflow
 
