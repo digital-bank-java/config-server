@@ -1,0 +1,5 @@
+configRepository:
+  uri: https://github.com/digital-bank-java/config-repo.git
+  defaultLabel: main
+  credentialsSecret:
+    name: config-server-git-credentials

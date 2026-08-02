@@ -27,7 +27,7 @@ It serves externalized runtime configuration from `config-repo` to the platform 
 ./mvnw test
 ./mvnw verify
 ./mvnw spring-boot:run
-helm lint helm --strict
+helm lint helm --strict --values helm/values-sit.yaml
 ```
 
 ## Runtime Notes

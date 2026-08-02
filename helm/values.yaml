@@ -9,10 +9,10 @@ image:
   pullPolicy: IfNotPresent
 
 configRepository:
-  uri: https://github.com/digital-bank-java/config-repo.git
-  defaultLabel: main
+  uri: ""
+  defaultLabel: ""
   credentialsSecret:
-    name: config-server-git-credentials
+    name: ""
     usernameKey: username
     tokenKey: token
 
