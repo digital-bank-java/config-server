@@ -188,13 +188,15 @@ kubectl get nodes
 Validate the chart without changing the cluster:
 
 ```bash
-helm lint helm
+helm lint helm --strict --values helm/values-sit.yaml
 
-helm template config-server helm |
+helm template config-server helm \
+  --namespace digital-bank-sit \
+  --values helm/values-sit.yaml |
   kubectl apply --dry-run=client -f -
 ```
 
-Create the namespace and an opaque Secret containing a repository-scoped, read-only GitHub credential. Never commit the token or place it in Helm values:
+Create the namespace and an opaque Secret containing a repository-scoped, read-only GitHub credential. Never commit the token or place it in Helm values. The Helm values file points to this existing Secret by name only:
 
 ```bash
 kubectl create namespace digital-bank-sit --dry-run=client -o yaml |
@@ -218,6 +220,7 @@ Install or upgrade the release in the SIT namespace:
 helm upgrade --install config-server helm \
   --namespace digital-bank-sit \
   --create-namespace \
+  --values helm/values-sit.yaml \
   --wait \
   --timeout 5m
 ```
