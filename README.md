@@ -294,7 +294,7 @@ Before opening a pull request:
 ```bash
 git status
 ./mvnw verify
-helm lint helm --strict
+helm lint helm --strict --values helm/values-sit.yaml
 git diff --check
 ```
 
