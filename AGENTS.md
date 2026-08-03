@@ -32,9 +32,9 @@ helm lint helm --strict --values helm/values-sit.yaml
 
 ## Runtime Notes
 
-- Default local endpoint: `http://localhost:8888`
-- Local runtime config source is the `config-repo` repository.
-- SIT and higher environments should use Git-backed configuration, not hardcoded local files.
+- Default workstation endpoint: `http://localhost:8888`
+- The runtime configuration source is the `config-repo` repository.
+- Supported platform environments use Git-backed configuration; a workstation process is a debugging technique, not a separate environment.
 
 ## Dependency Notes
 

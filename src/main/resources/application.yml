@@ -24,7 +24,7 @@ spring:
           repositories:
             config-repo:
               name: customer-service
-              profiles: local
+              profiles: sit
               label: "${CONFIG_REPO_DEFAULT_LABEL:main}"
 
 management:
