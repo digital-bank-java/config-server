@@ -36,10 +36,10 @@ The sibling `config-repo` repository contains configuration served to client ser
 ```text
 config-repo/
 ├── application.yml
-├── application-local.yml
+├── application-sit.yml
 └── customer-service/
     ├── customer-service.yml
-    └── customer-service-local.yml
+    └── customer-service-sit.yml
 ```
 
 - `application.yml` contains defaults shared by all client services.
@@ -67,7 +67,7 @@ kubectl config current-context
 helm version --short
 ```
 
-## Run Locally
+## Run From A Workstation
 
 Clone `config-repo` beside this repository. The default local repository URI is `file:../config-repo`:
 
@@ -116,22 +116,22 @@ Retrieve the default configuration for `customer-service`:
 curl --fail http://localhost:8888/customer-service/default
 ```
 
-Retrieve the local-profile configuration:
+Retrieve the SIT configuration:
 
 ```bash
-curl --fail http://localhost:8888/customer-service/local
+curl --fail http://localhost:8888/customer-service/sit
 ```
 
-The local response combines configuration from:
+The SIT response combines configuration from:
 
 ```text
-config-repo/customer-service/customer-service-local.yml
-config-repo/application-local.yml
+config-repo/customer-service/customer-service-sit.yml
+config-repo/application-sit.yml
 config-repo/customer-service/customer-service.yml
 config-repo/application.yml
 ```
 
-More specific profile and service configuration takes precedence over shared defaults. The response `version` identifies the exact `config-repo` Git commit used.
+More specific profile and service configuration takes precedence over shared defaults. The response `version` identifies the exact `config-repo` Git commit used. Supported runtime profiles are `sit`, `uat`, and `prod`; `local` is not a platform environment.
 
 ## Run With Docker
 
@@ -168,7 +168,7 @@ Verify the container and stop it:
 
 ```bash
 curl --fail http://localhost:8888/actuator/health
-curl --fail http://localhost:8888/customer-service/local
+curl --fail http://localhost:8888/customer-service/sit
 docker stop digital-bank-java-config-server
 test -n "$CONFIG_REPO_FIXTURE" && rm -rf "$CONFIG_REPO_FIXTURE"
 unset CONFIG_REPO_FIXTURE
